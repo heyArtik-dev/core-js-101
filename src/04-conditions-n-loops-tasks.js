@@ -199,8 +199,27 @@ function findFirstSingleChar(str) {
  *   5, 3, true, true   => '[3, 5]'
  *
  */
-function getIntervalString(/* a, b, isStartIncluded, isEndIncluded */) {
-  throw new Error('Not implemented');
+function getIntervalString(a, b, isStartIncluded, isEndIncluded) {
+  const openTrue = '[';
+  const closeTrue = ']';
+  const openFalse = '(';
+  const closeFalse = ')';
+  const arr = [a, b].sort((i, j) => (i > j ? 1 : -1));
+  let res = '';
+
+  switch (isStartIncluded) {
+    case true: res += `${openTrue + arr[0]}, ${arr[1]}`; break;
+    case false: res += `${openFalse + arr[0]}, ${arr[1]}`; break;
+    default: break;
+  }
+
+  switch (isEndIncluded) {
+    case true: res += closeTrue; break;
+    case false: res += closeFalse; break;
+    default: break;
+  }
+
+  return res;
 }
 
 
@@ -216,8 +235,8 @@ function getIntervalString(/* a, b, isStartIncluded, isEndIncluded */) {
  * 'rotator' => 'rotator'
  * 'noon' => 'noon'
  */
-function reverseString(/* str */) {
-  throw new Error('Not implemented');
+function reverseString(str) {
+  return str.split(' ').map((e) => e.split('').reverse().join('')).reverse().join(' ');
 }
 
 
@@ -233,8 +252,8 @@ function reverseString(/* str */) {
  *   87354 => 45378
  *   34143 => 34143
  */
-function reverseInteger(/* num */) {
-  throw new Error('Not implemented');
+function reverseInteger(num) {
+  return +num.toString().split('').reverse().join('');
 }
 
 
@@ -258,8 +277,21 @@ function reverseInteger(/* num */) {
  *   5436468789016589 => false
  *   4916123456789012 => false
  */
-function isCreditCardNumber(/* ccn */) {
-  throw new Error('Not implemented');
+function isCreditCardNumber(ccn) {
+  const ccnS = ccn.toString();
+  let sum = 0;
+  const parity = (ccnS.length) % 2;
+  for (let i = 0; i < ccnS.length; i += 1) {
+    let digit = Number(ccnS[i]);
+    if (i % 2 === parity) {
+      digit *= 2;
+      if (digit > 9) {
+        digit -= 9;
+      }
+    }
+    sum += digit;
+  }
+  return Number(sum % 10) === 0;
 }
 
 /**
@@ -276,8 +308,13 @@ function isCreditCardNumber(/* ccn */) {
  *   10000 ( 1+0+0+0+0 = 1 ) => 1
  *   165536 (1+6+5+5+3+6 = 26,  2+6 = 8) => 8
  */
-function getDigitalRoot(/* num */) {
-  throw new Error('Not implemented');
+function getDigitalRoot(num) {
+  const number = num.toString().split('').map((e) => +e).reduce((acc, v) => acc + v)
+    .toString()
+    .split('')
+    .map((i) => +i)
+    .reduce((prev, n) => prev + n);
+  return number < 9 ? number : false;
 }
 
 
@@ -327,8 +364,8 @@ function isBracketsBalanced(/* str */) {
  *    365, 4  => '11231'
  *    365, 10 => '365'
  */
-function toNaryString(/* num, n */) {
-  throw new Error('Not implemented');
+function toNaryString(num, n) {
+  return num.toString(n);
 }
 
 
@@ -344,8 +381,22 @@ function toNaryString(/* num, n */) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/verbalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(pathes) {
+  if (pathes.length === 0) return '';
+
+  const splitPaths = pathes.map((path) => path.split('/'));
+
+  let commonPath = '';
+  for (let i = 0; i < splitPaths[0].length; i += 1) {
+    const currentDir = splitPaths[0][i];
+    if (splitPaths.every((pathArr) => pathArr[i] === currentDir)) {
+      commonPath += `${currentDir}/`;
+    } else {
+      break;
+    }
+  }
+
+  return commonPath || '';
 }
 
 
