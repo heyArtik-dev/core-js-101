@@ -153,8 +153,12 @@ function doRectanglesOverlap(rect1, rect2) {
  *   { center: { x:0, y:0 }, radius:10 },  { x:10, y:10 }   => false
  *
  */
-function isInsideCircle(/* circle, point */) {
-  throw new Error('Not implemented');
+function isInsideCircle(circle, point) {
+  const dx = point.x - circle.center.x;
+  const dy = point.y - circle.center.y;
+  const distanceSquared = Math.sqrt((dx * dx) + (dy * dy));
+
+  return distanceSquared < circle.radius;
 }
 
 
@@ -342,8 +346,33 @@ function getDigitalRoot(num) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+function isBracketsBalanced(str) {
+  // Стек для хранения открывающихся скобок
+  const stack = [];
+
+  // Хэш для соответствия закрывающихся скобок с открывающимися
+  const matchingBrackets = {
+    ')': '(',
+    ']': '[',
+    '}': '{',
+    '>': '<',
+  };
+
+  for (let i = 0; i < str.length; i += 1) {
+    if (['(', '[', '{', '<'].includes(str[i])) {
+      // Открывающая скобка, добавляем в стек
+      stack.push(str[i]);
+    } else if ([')', ']', '}', '>'].includes(str[i])) {
+      // Закрывающая скобка
+      if (stack.length === 0 || stack.pop() !== matchingBrackets[str[i]]) {
+        // Если стек пуст или верхний элемент не соответствует закрывающей скобке
+        return false;
+      }
+    }
+  }
+
+  // Если стек пуст, значит скобки сбалансированы
+  return stack.length === 0;
 }
 
 
