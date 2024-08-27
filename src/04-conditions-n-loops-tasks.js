@@ -119,8 +119,11 @@ function isTriangle(a, b, c) {
  *   { top:20, left:20, width: 20, height: 20 }    =>  false
  *
  */
-function doRectanglesOverlap(/* rect1, rect2 */) {
-  throw new Error('Not implemented');
+function doRectanglesOverlap(rect1, rect2) {
+  if (rect2.top > rect1.top + rect1.height) return false;
+  if (rect2.left > rect1.left + rect1.width) return false;
+
+  return true;
 }
 
 
@@ -418,10 +421,37 @@ function getCommonDirectoryPath(pathes) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  if (m1[0].length !== m2.length) return false;
+  const length = m1.length === 1 ? m1.length : m2.length;
+  const arr = [];
+  if (length > 1) {
+    for (let i = 0; i < length; i += 1) {
+      const mult = [];
+      for (let j = 0; j < length; j += 1) {
+        if (m1[i][j] === 0) {
+          mult.push(m2[i][j]);
+        } else {
+          mult.push(m1[i][j] * m2[i][j]);
+        }
+      }
+      arr.push(mult);
+    }
+  } else {
+    for (let i = 0; i < length; i += 1) {
+      const mult = [];
+      for (let j = 0; j < m1[0].length; j += 1) {
+        if (m1[i][j] === 0) {
+          mult.push(m2[i][j]);
+        } else {
+          mult.push(m1[i][j] * m2[j]);
+        }
+      }
+      arr.push([mult.reduce((acc, v) => acc + v)]);
+    }
+  }
+  return arr;
 }
-
 
 /**
  * Returns the evaluation of the specified tic-tac-toe position.
@@ -453,8 +483,39 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(position) {
+  function checkLine(line) {
+    const [a, b, c] = line;
+    if (a === b && b === c && a !== undefined) {
+      return a;
+    }
+    return undefined;
+  }
+
+  // Check rows
+  for (let row = 0; row < 3; row += 1) {
+    const result = checkLine(position[row]);
+    if (result !== undefined) return result;
+  }
+
+  // Check columns
+  for (let col = 0; col < 3; col += 1) {
+    const result = checkLine([position[0][col], position[1][col], position[2][col]]);
+    if (result !== undefined) return result;
+  }
+
+  // Check diagonals
+  const diag1 = [position[0][0], position[1][1], position[2][2]];
+  const diag2 = [position[0][2], position[1][1], position[2][0]];
+
+  const resultDiag1 = checkLine(diag1);
+  if (resultDiag1 !== undefined) return resultDiag1;
+
+  const resultDiag2 = checkLine(diag2);
+  if (resultDiag2 !== undefined) return resultDiag2;
+
+  // No winner
+  return undefined;
 }
 
 
